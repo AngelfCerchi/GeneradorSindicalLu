@@ -25,7 +25,7 @@ def crearCategoria(categoria,periodo,codigo,pdf):
 def crearVersion2(periodoVersion,monto,categoria,sindicato,pdf):
         lineaUno=  '<record id="category_price_general_category_{}_{}" model="hr.labor_union.category.price">'.format(categoria.lower().replace(" ","_"),periodoVersion.strftime("%m/%Y").replace("/",""))
         lineaDos = '<field name="labor_union_category_id" ref="l10n_ar_payroll_lu_{}.general_category_{}" />'.format(sindicato.lower(),categoria.lower().replace(" ","_"))
-        lineaTres =  '<field name="from_date">{}</field>'.format(periodoVersion.strftime("%m/%Y").replace("/","-"))
+        lineaTres =  '<field name="from_date">{}</field>'.format(periodoVersion.strftime("%Y/%m/%d").replace("/","-"))
         lineaCuatro = '<field name="value">{}</field>'.format(monto.replace(",","."))
         lineaCinco = '</record>'
         data = [lineaUno,lineaDos,lineaTres,lineaCuatro,lineaCinco]
@@ -45,7 +45,7 @@ with open(path) as csv_file:
         periodo = row[1]
         codigo = row[2]
         print("")
-        print("* CREANDO CATEGORIA: {} CODIGO: {} TIPO_DE_PAGO: {}".format(categoria,codigo,periodo))
+        print("** CREANDO CATEGORIA: '{}' CODIGO: '{}' TIPO_DE_PAGO: '{}'".format(categoria,codigo,periodo))
         crearCategoria(categoria,periodo,codigo,pdf)
         for i in range(3,len(row),2):
             if row[i]=="":
@@ -54,7 +54,9 @@ with open(path) as csv_file:
                 periodoVersion = row[i]
                 periodoVersionFormatted = datetime.strptime(periodoVersion, '%d/%m/%Y' )
                 monto = row[i+1]
-                print("** CREANDO CATEGORY PRICE PARA:  Cat {} Fecha {} Monto {} ".format(categoria,periodoVersionFormatted.strftime("%m/%Y"),monto))
+                print("* CREANDO VERSION PARA:  Cat '{}' Fecha '{}' Monto '{}' ".format(categoria,periodoVersionFormatted.strftime("%m/%Y"),monto))
                 crearVersion2(periodoVersionFormatted,monto,categoria,sindicato,pdf)
-
+    print("")
+    print(" SE CREO EL REPORTE EN PDF EN SRC/categorias_{}.pdf".format(sindicato))
+    print("")
     pdf.output("categorias_{}.pdf".format(sindicato))
