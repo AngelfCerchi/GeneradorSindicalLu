@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 #Configuracion:
-path = Path("../data/fatsa_csv2.csv").resolve()
+path = Path("../data/profesionales_fatsa.csv").resolve()
 sindicato = "fatsa"
 
 
@@ -33,8 +33,9 @@ def crearVersion2(periodoVersion,monto,categoria,sindicato,pdf):
             pdf.cell(200,10,e,ln=2,align="L")
         
 with open(path) as csv_file:
-    pdf = FPDF(orientation='P', unit='mm', format='A4')
+    pdf = FPDF(orientation='L', unit='mm', format='A4')
     pdf.add_page()
+    pdf.set_right_margin(32)
     pdf.set_font("Arial",size=11)
     csv_reader = csv.reader(csv_file, delimiter=';')
     next(csv_reader)
